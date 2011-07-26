@@ -14,8 +14,9 @@ dependencies but the most interesting part is in the cakefile. You will
 just have to rename your file and the application name in the Cakefile to 
 start working. Build and automatic build actions are already configured.
 
+Documentation building is based on Docco.
 
-I hope to add BDD setup and docs setup soon (using respectively on Jasmine and Docco).
+I hope to add BDD setup soon (using Jasmine).
 
 
 But first, to use Coffescript  you should must set up a development environment :
@@ -40,6 +41,10 @@ UglifyJS, the minifier:
 
     npm install uglify-js
 
+Docco, the documentation builder:
+
+    npm install docco
+
 And the Stylus compiler for CSS:
 
     npm install stylus
@@ -52,3 +57,6 @@ or for automatic build:
 
     cake watch
 
+and for documentation:
+ 
+    cake docs
