@@ -112,3 +112,14 @@ task 'watch', 'Watch prod source files and build changes', ->
             puts "Saw change in " + styleFile
             invoke 'build'
 
+
+# Build documentations
+task 'docs', 'Build documentations', ->
+
+  puts 'Start buidling code documentations'
+  command = "docco " + srcFiles.join(" ")
+
+  exec command, (err, stdout, stderr) ->
+    throw err if err
+    print stdout + stderr
+    puts 'Documentations built.'
