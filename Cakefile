@@ -123,3 +123,4 @@ task 'docs', 'Build documentations', ->
     throw err if err
     print stdout + stderr
     puts 'Documentations built.'
+
