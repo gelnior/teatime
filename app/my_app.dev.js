@@ -1,5 +1,5 @@
 (function() {
-  var MyAppCollection, MyAppView, MyModel, MyModelRow, myApp;
+  var MyAppCollection, MyAppView, MyModel, MyModelRow, myApp, panda;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -90,4 +90,5 @@
   myApp = new MyAppView;
   myApp.setWidgets();
   myApp.setListeners();
+  panda = "happy";
 }).call(this);

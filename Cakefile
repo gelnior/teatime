@@ -37,6 +37,8 @@ walk("./src")
 srcFiles.reverse()
 appFiles = appFiles.concat(srcFiles)
 
+
+
 # Browse styles file
 walk("./styles")
 styleFile = stylFiles[0]
@@ -123,4 +125,15 @@ task 'docs', 'Build documentations', ->
     throw err if err
     print stdout + stderr
     puts 'Documentations built.'
+
+# Build test sources
+#task 'build tests', 'Compile coffee script tests to JS' ->
+#  puts "ok"
+
+# Run tests
+#task 'tests', 'run tests through browser' ->
+#  puts "ok"
+
+
+
 
