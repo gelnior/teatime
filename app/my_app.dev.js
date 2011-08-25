@@ -1,5 +1,5 @@
 (function() {
-  var MyAppCollection, MyAppView, MyModel, MyModelRow, myApp, panda;
+  var MyAppCollection, MyAppView, MyModel, MyModelRow, myApp;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -30,10 +30,10 @@
     return MyModel;
   })();
   MyAppCollection = (function() {
+    __extends(MyAppCollection, Backbone.Collection);
     function MyAppCollection() {
       MyAppCollection.__super__.constructor.apply(this, arguments);
     }
-    __extends(MyAppCollection, Backbone.Collection);
     MyAppCollection.prototype.model = MyApp;
     MyAppCollection.prototype.url = '/my-app/';
     MyAppCollection.prototype.parse = function(response) {
@@ -90,5 +90,4 @@
   myApp = new MyAppView;
   myApp.setWidgets();
   myApp.setListeners();
-  panda = "happy";
 }).call(this);
