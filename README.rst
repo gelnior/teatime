@@ -19,20 +19,12 @@ server oriented.
 
 *NB: CSS are handled by Stylus, the Coffeescript-like language for CSS.*
 
-
-The sample code is based on Backbone.js but there is very few code and it 
-almost do nothing, I put also JQuery and Underscore.js as default 
-dependencies but the most interesting part is in the cakefile. You will 
-just have to rename your file and the application name in the Cakefile to 
-start working. Build and automatic build actions are already configured.
-
-
 ===Setup===
 
 Just change the name of the application in the cakefile by changing the
-variable *appName*.
+variable *appName*. Then rename files as you like.
 
-To use teatime tools,  you should must set up a development environment :
+Don't forget that to use teatime tools,  you should must set up a development environment :
 
     git clone https://github.com/ry/node.git
 
