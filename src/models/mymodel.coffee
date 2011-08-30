@@ -28,7 +28,7 @@ class MyModel extends Backbone.Model
 
 ## Model collection
 class MyAppCollection extends Backbone.Collection
-  model: MyApp
+  model: MyModel
 
   # Url where models lives.
   url: '/my-app/'
