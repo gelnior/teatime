@@ -4,7 +4,7 @@ appName = "my_app"
 
 # Dependencies
 sys    = require 'sys'
-print  = sys.print
+print  = console.log
 puts   = sys.puts
 fs     = require 'fs'
 {exec} = require 'child_process'
@@ -47,17 +47,21 @@ process = (appContents, suffix, callback) ->
                appContents.join('\n\n'), \
                'utf8', \
                (err) ->
-      throw err if err
-      # Compile files
+    if err
+      print 'Process caught exception:\n' + err
+    else
 
+      # Compile files
       exec "coffee --compile app/#{appName}.#{suffix}.coffee", \
            (err, stdout, stderr) ->
-        throw err if err
-        print stdout + stderr
-
-        fs.unlink "app/#{appName}.#{suffix}.coffee", (err) ->
-          throw err if err
-          callback()
+        if err
+          print 'Compilation caught exception:\n' + err
+        else
+          fs.unlink "app/#{appName}.#{suffix}.coffee", (err) ->
+            if err
+              print err
+            else
+              callback()
 
 # End Tools
 
@@ -75,30 +79,35 @@ styleFile = stylFiles[0]
 walk("./tests/specs", testFiles)
 
 
-
 # Build task
 task 'build', 'Build single application file from source files', ->
   puts 'Start build'
-  appContents = new Array remaining = appFiles.length
-
+  appContents = new Array
+  remaining = appFiles.length
 
   # Compile styles
   puts 'Building CSS'
   exec "stylus " + styleFile, (err, stdout, stderr) ->
-    throw err if err
-    print stdout + stderr
+    if err
+      print "Stylus caught exception: \n" + err
+    else
+      print stdout
 
-    # Then compile JS Code
-    puts 'Building JS'
-    for file, index in appFiles then do (file, index) ->
-      puts file
-      fs.readFile "#{file}", 'utf8', (err, fileContents) ->
-        throw err if err
-        appContents[index] = fileContents
-        if --remaining is 0
-          process appContents, "dev", () ->
-            puts 'Build done'
-            invoke 'minify'
+      # Then compile JS Code
+      puts 'Building JS'
+
+      for file, index in appFiles then do (file, index) ->
+        puts file
+        fs.readFile "#{file}", 'utf8', (err, fileContents) ->
+
+          if err
+            print 'Read file caught exception:\n ' + err
+          else
+            appContents[index] = fileContents
+            if --remaining is 0
+              process appContents, "dev", () ->
+                puts 'Build done'
+                invoke 'minify'
 
 
 # Make JS file lighter
@@ -108,27 +117,28 @@ task 'minify', 'Minify the resulting application file after build', ->
   command = "uglifyjs app/#{appName}.dev.js > app/#{appName}.js"
 
   exec command, (err, stdout, stderr) ->
-    throw err if err
-    print stdout + stderr
-    puts 'Minify done.'
+    if err
+      print "Minify caught exception: \n" + err
+    else
+      puts 'Minify done.'
 
 
 # Automatically build app when a change occurs
 task 'watch', 'Watch prod source files and build changes', ->
-    puts "Starting watching for modifications"
+    print "Starting watching for modifications..."
 
     # Watch Coffeescript files
     for file in appFiles then do (file) ->
-        fs.watchFile "#{file}", (curr, prev) ->
-            if +curr.mtime isnt +prev.mtime
-                puts "Saw change in app/#{file}.coffee"
-                invoke 'build'
+      fs.watchFile "#{file}", (curr, prev) ->
+        if +curr.mtime isnt +prev.mtime
+          print "Saw change in app/#{file}.coffee"
+          invoke 'build'
 
     # Watch Stylus file
     fs.watchFile styleFile, (curr, prev) ->
-        if +curr.mtime isnt +prev.mtime
-            puts "Saw change in " + styleFile
-            invoke 'build'
+      if +curr.mtime isnt +prev.mtime
+        print "Saw change in " + styleFile
+        invoke 'build'
 
 
 # Build documentations
@@ -138,9 +148,11 @@ task 'docs', 'Build documentations', ->
   command = "docco " + srcFiles.join(" ")
 
   exec command, (err, stdout, stderr) ->
-    throw err if err
-    print stdout + stderr
-    puts 'Documentations built.'
+    if err
+      print "Docco caught exception: \n" + err
+    else
+      print stdout
+      print 'Documentations built.'
 
 
 # Build test sources
@@ -149,27 +161,33 @@ task 'build-tests', 'Compile coffee script tests to JS', ->
 
   # Then compile JS Code
   puts 'Building JS'
+
   allFiles = []
   allFiles = allFiles.concat(srcFiles)
   allFiles = allFiles.concat(testFiles)
   remaining = allFiles.length
-  print allFiles.length
+
   for file, index in allFiles then do (file, index) ->
     puts file
     fs.readFile "#{file}", 'utf8', (err, fileContents) ->
-      throw err if err
-      appContents[index] = fileContents
-      if --remaining is 0
-        process appContents, "tests", ->
-          puts 'Tests build'
+      if err
+        print "Read file caught exception: \n" + err
+      else
+        print stdout + stderr
+        appContents[index] = fileContents
+        if --remaining is 0
+          process appContents, "tests", ->
+            puts 'Tests build'
+
 
 # Run tests
 task 'tests', 'run tests through browser', ->
-  puts 'Run test through firefox'
+  puts 'Run tests through firefox'
   command = "firefox index-test.html "
 
   exec command, (err, stdout, stderr) ->
-    throw err if err
+    if err
+      print "Run firefox caught exception: \n" + err
 
 
 
