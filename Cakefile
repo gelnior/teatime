@@ -13,13 +13,19 @@ fs     = require 'fs'
 # Additional files to add to file that can be found in source directory.:
 appFiles  = [
 ]
-
+# Source files (automatically filled)
 srcFiles = []
+# Stylus files
 stylFiles = []
+# Jasmine tests files
+testFiles = []
+
+
+# Tools
 
 # Browse source directory to find file with coffee extension and add them
 # to the app files list.
-walk = (dir) ->
+walk = (dir, fileList) ->
   list = fs.readdirSync(dir)
   if list
     for file in list
@@ -27,21 +33,47 @@ walk = (dir) ->
         filename = dir + '/' + file
         stat = fs.statSync(filename)
         if stat and stat.isDirectory()
-          walk (filename)
+          walk(filename, fileList)
         else if filename.substr(-6) == "coffee"
-          srcFiles.push(filename)
+          fileList.push(filename)
         else if filename.substr(-4) == "styl"
-          stylFiles.push(filename)
+          fileList.push(filename)
+  fileList
 
-walk("./src")
+# Process compile given files to coffee script file adding given suffix.
+process = (appContents, suffix, callback) ->
+  # Concatenate files
+  fs.writeFile "app/#{appName}.#{suffix}.coffee", \
+               appContents.join('\n\n'), \
+               'utf8', \
+               (err) ->
+      throw err if err
+      # Compile files
+
+      exec "coffee --compile app/#{appName}.#{suffix}.coffee", \
+           (err, stdout, stderr) ->
+        throw err if err
+        print stdout + stderr
+
+        fs.unlink "app/#{appName}.#{suffix}.coffee", (err) ->
+          throw err if err
+          callback()
+
+# End Tools
+
+
+# Grab src files and add them to app files.
+walk("./src", srcFiles)
 srcFiles.reverse()
 appFiles = appFiles.concat(srcFiles)
 
-
-
 # Browse styles file
-walk("./styles")
+walk("./styles", stylFiles)
 styleFile = stylFiles[0]
+
+# Browse tests files
+walk("./tests/specs", testFiles)
+
 
 
 # Build task
@@ -63,26 +95,10 @@ task 'build', 'Build single application file from source files', ->
       fs.readFile "#{file}", 'utf8', (err, fileContents) ->
         throw err if err
         appContents[index] = fileContents
-        process() if --remaining is 0
-
-
-  # Once data are prepared, the compilation process is running.
-  process = ->
-    # Concatenate files 
-    fs.writeFile "app/#{appName}.dev.coffee", appContents.join('\n\n'), \ 
-                 'utf8', \
-        (err) ->
-      throw err if err
-
-      # Compile files
-      exec "coffee --compile app/#{appName}.dev.coffee", \
-           (err, stdout, stderr) ->
-        throw err if err
-        print stdout + stderr
-        fs.unlink "app/#{appName}.dev.coffee", (err) ->
-          throw err if err
-          puts 'Build done.'
-          invoke 'minify'
+        if --remaining is 0
+          process appContents, "dev", () ->
+            puts 'Build done'
+            invoke 'minify'
 
 
 # Make JS file lighter
@@ -126,13 +142,34 @@ task 'docs', 'Build documentations', ->
     print stdout + stderr
     puts 'Documentations built.'
 
+
 # Build test sources
-#task 'build tests', 'Compile coffee script tests to JS' ->
-#  puts "ok"
+task 'build-tests', 'Compile coffee script tests to JS', ->
+  appContents = new Array
+
+  # Then compile JS Code
+  puts 'Building JS'
+  allFiles = []
+  allFiles = allFiles.concat(srcFiles)
+  allFiles = allFiles.concat(testFiles)
+  remaining = allFiles.length
+  print allFiles.length
+  for file, index in allFiles then do (file, index) ->
+    puts file
+    fs.readFile "#{file}", 'utf8', (err, fileContents) ->
+      throw err if err
+      appContents[index] = fileContents
+      if --remaining is 0
+        process appContents, "tests", ->
+          puts 'Tests build'
 
 # Run tests
-#task 'tests', 'run tests through browser' ->
-#  puts "ok"
+task 'tests', 'run tests through browser', ->
+  puts 'Run test through firefox'
+  command = "firefox index-test.html "
+
+  exec command, (err, stdout, stderr) ->
+    throw err if err
 
 
 

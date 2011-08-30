@@ -7,3 +7,4 @@ myApp = new MyAppView
 myApp.setWidgets()
 myApp.setListeners()
 
+panda = "happy"

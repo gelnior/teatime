@@ -92,8 +92,8 @@
   myApp.setListeners();
   panda = "happy";
   describe('panda', function() {
-    return it('is happy', function() {
-      return expect(panda).toBe('happy');
+    it('is happy', function() {
+      expect(panda).toBe('happy');
     });
   });
 }).call(this);
