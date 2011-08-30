@@ -1,5 +1,5 @@
 (function() {
-  var MyAppCollection, MyAppView, MyModel, MyModelRow, myApp;
+  var MyAppCollection, MyAppRouter, MyAppView, MyModel, MyModelRow, myApp, panda, router;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -34,7 +34,7 @@
     function MyAppCollection() {
       MyAppCollection.__super__.constructor.apply(this, arguments);
     }
-    MyAppCollection.prototype.model = MyApp;
+    MyAppCollection.prototype.model = MyModel;
     MyAppCollection.prototype.url = '/my-app/';
     MyAppCollection.prototype.parse = function(response) {
       return response.rows;
@@ -87,7 +87,27 @@
     };
     return MyAppView;
   })();
+  MyAppRouter = (function() {
+    __extends(MyAppRouter, Backbone.Router);
+    function MyAppRouter() {
+      MyAppRouter.__super__.constructor.apply(this, arguments);
+    }
+    MyAppRouter.prototype.routes = {
+      "my-route/:name": "doIt"
+    };
+    MyAppRouter.prototype.doIt = function(name) {
+      return alert(name);
+    };
+    MyAppRouter.prototype.registerView = function(view) {
+      return this.view = view;
+    };
+    return MyAppRouter;
+  })();
   myApp = new MyAppView;
   myApp.setWidgets();
   myApp.setListeners();
+  panda = "happy";
+  router = new MyAppRouter;
+  router.registerView(myApp);
+  Backbone.history.start();
 }).call(this);

@@ -8,3 +8,8 @@ myApp.setWidgets()
 myApp.setListeners()
 
 panda = "happy"
+
+router = new MyAppRouter
+router.registerView(myApp)
+
+Backbone.history.start()
