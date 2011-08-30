@@ -1,3 +1,6 @@
+What is Teatime ?
+=================
+
 Teatime is a kind of boilerplate for Coffeescript client-only application. It
 includes :
 
@@ -19,7 +22,9 @@ server oriented.
 
 *NB: CSS are handled by Stylus, the Coffeescript-like language for CSS.*
 
-===Setup===
+Setup
+=====
+
 
 Just change the name of the application in the cakefile by changing the
 variable *appName*. Then rename files as you like.
@@ -28,7 +33,10 @@ Don't forget that to use teatime tools,  you should must set up a development en
 
     git clone https://github.com/ry/node.git
 
-    cd node ./configure make make install
+    cd node 
+    ./configure 
+    make 
+    make install
 
 Then install its package manager, NPM:
 
