@@ -1,9 +1,20 @@
-I just share here what I found useful to set up when starting a browser-only 
-coffee script application. I principally use it for newebe to develop
-the client side of its embedded applications. I did this because when 
-I was looking for good frameworks for developing javascript application 
-on client side, I found only frameworks too big or too server oriented.
+Teatime is a kind of boilerplate for Coffeescript client-only application. It
+includes :
+* Cakefile task to build js file from coffee source files
+* Cakefile task to watch for file modification and automatically build the app
+* Cakefile task to build docs with Docco
+* Cakefile task to build CSS from stylus source files
+* Cakefile task to run Jasmine BDD tests
+* dependencies: backbone, jquery, underscore, modernizr, respond
+* HTML 5 boilerplate from initializr.com
+* directory structure for a backbone app
 
+I just share here what I found useful to set up when starting a browser-only 
+coffee script application. I principally use it for newebe (an open source 
+project) to develop the client side of its embedded applications. 
+I did this because when  I was looking for good frameworks for developing 
+javascript application on client side, I found only frameworks too big or too 
+server oriented.
 
 *NB: CSS are handled by Stylus, the Coffeescript-like language for CSS.*
 
@@ -14,12 +25,13 @@ dependencies but the most interesting part is in the cakefile. You will
 just have to rename your file and the application name in the Cakefile to 
 start working. Build and automatic build actions are already configured.
 
-Documentation building is based on Docco.
 
-I hope to add BDD setup soon (using Jasmine).
+===Setup===
 
+Just change the name of the application in the cakefile by changing the
+variable *appName*.
 
-But first, to use Coffescript  you should must set up a development environment :
+To use teatime tools,  you should must set up a development environment :
 
     git clone https://github.com/ry/node.git
 
