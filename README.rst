@@ -1,5 +1,6 @@
 Teatime is a kind of boilerplate for Coffeescript client-only application. It
 includes :
+
 * Cakefile task to build js file from coffee source files
 * Cakefile task to watch for file modification and automatically build the app
 * Cakefile task to build docs with Docco
