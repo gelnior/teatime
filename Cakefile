@@ -15,10 +15,10 @@ appFiles  = [
 ]
 # Source files (automatically filled)
 srcFiles = []
-# Stylus files
-stylFiles = []
 # Jasmine tests files
 testFiles = []
+# Stylus file to build css
+styleFile = "./styles/#{appName}.styl"
 
 
 # Tools
@@ -68,12 +68,19 @@ process = (appContents, suffix, callback) ->
 
 # Grab src files and add them to app files.
 walk("./src", srcFiles)
-srcFiles.reverse()
+
+# Weird way to enusre that main file is converted at the end of the result file.
+i = 0
+appFile = ""
+for file, index in srcFiles
+  if file == "./src/#{appName}.coffee"
+    appFile = file
+    i = index
+srcFiles.splice(i, 1)
+srcFiles.push(appFile)
+
 appFiles = appFiles.concat(srcFiles)
 
-# Browse styles file
-walk("./styles", stylFiles)
-styleFile = stylFiles[0]
 
 # Browse tests files
 walk("./tests/specs", testFiles)
